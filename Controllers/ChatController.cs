@@ -7,29 +7,31 @@ using Microsoft.EntityFrameworkCore;
 namespace MovieGuideApi.Controllers
 {
     [Route("api/[controller]")]
-    public class UserController : Controller
+    public class ChatController : Controller
     {
         private readonly MovieGuideContext _context;
 
-        public UserController(MovieGuideContext context)
+        public ChatController (MovieGuideContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public IEnumerable<User> Get()
+        public IEnumerable<Chat> Get()
         {
-            List<User> results = _context.User
-                                            .Include(x => x.userEvents)
+            List<Chat> results = _context.Chat
+                                            .Include(x => x.evnt)
+                                            .Include(x => x.messages)
                                             .ToList();
             return results;
         }
 
-        [HttpGet("{id}", Name = "GetUser")]
+        [HttpGet("{id}", Name = "GetChat")]
         public IActionResult Get(int id)
         {
-            var result = _context.User
-                                    .Include(x => x.userEvents)
+            var result = _context.Chat
+                                    .Include(x => x.evnt)
+                                    .Include(x => x.messages)
                                     .FirstOrDefault(x => x.id == id);
             if (result == null)
                 return NotFound();
@@ -38,32 +40,32 @@ namespace MovieGuideApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]User item)
+        public IActionResult Create([FromBody] Chat item)
         {
             if (item == null)
                 return BadRequest();
 
-            _context.User.Add(item);
+            _context.Chat.Add(item);
             _context.SaveChanges();
 
-            return CreatedAtRoute("GetUser", new { id = item.id }, item);
+            return CreatedAtRoute("GetChat", new { id = item.id }, item);
         }
 
         [HttpPut]
-        public IActionResult Update(long id, [FromBody] User item)
+        public IActionResult Update(long id, [FromBody] Chat item)
         {
             if (item == null || item.id != id)
                 return BadRequest();
-
-            var user = _context.User.FirstOrDefault(x => x.id == id);
-            if (user == null)
-                return NotFound();
             
-            user.name = item.name;
-            user.email = item.email;
-            user.password = item.password;
+            var chat = _context.Chat.FirstOrDefault(x => x.id == id);
+            if (chat == null)
+                return NotFound();
 
-            _context.User.Update(user);
+            chat.eventId = item.eventId;
+            chat.evnt = item.evnt;
+            chat.messages = item.messages;
+
+            _context.Chat.Update(chat);
             _context.SaveChanges();
 
             return new NoContentResult();
@@ -72,11 +74,11 @@ namespace MovieGuideApi.Controllers
         [HttpDelete]
         public IActionResult Delete(long id)
         {
-            var user = _context.User.FirstOrDefault(x => x.id == id);
-            if (user == null)
+            var chat = _context.Chat.FirstOrDefault(x => x.id == id);
+            if (chat == null)
                 return NotFound();
 
-            _context.User.Remove(user);
+            _context.Chat.Remove(chat);
             _context.SaveChanges();
 
             return new NoContentResult();

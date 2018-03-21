@@ -11,9 +11,10 @@ using System;
 namespace MovieGuideApi.Migrations
 {
     [DbContext(typeof(MovieGuideContext))]
-    partial class MovieGuideContextModelSnapshot : ModelSnapshot
+    [Migration("20180321142527_thingers")]
+    partial class thingers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

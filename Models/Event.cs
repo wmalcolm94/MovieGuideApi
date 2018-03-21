@@ -10,6 +10,6 @@ namespace MovieGuideApi.Models
         public DateTime date { get; set; }
         public int chatId { get; set; }
         public Chat chat { get; set; }
-        public ICollection<User> users { get; set; }
+        public ICollection<UserEvent> userEvents { get; set; }
     }
 }

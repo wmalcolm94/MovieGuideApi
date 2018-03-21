@@ -20,5 +20,8 @@ namespace MovieGuideApi.Models
         public DbSet<Event> Event { get; set; }
         public DbSet<Movie> Movie { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Chat> Chat { get; set; }
+        public DbSet<Message> Message { get; set; }
+        public DbSet<UserEvent> UserEvent { get; set; }
     }
 }

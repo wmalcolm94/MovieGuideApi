@@ -19,7 +19,10 @@ namespace MovieGuideApi.Controllers
         [HttpGet]
         public IEnumerable<Event> Get()
         {
-            List<Event> results = _context.Event.ToList();
+            List<Event> results = _context.Event
+                                        .Include(x => x.chat)
+                                        .Include(x => x.userEvents)
+                                        .ToList();
             return results;
         }
 
@@ -27,7 +30,10 @@ namespace MovieGuideApi.Controllers
         [HttpGet("{id}", Name = "GetEvent")]
         public IActionResult Get(int id)
         {
-            var result = _context.Event.FirstOrDefault(x => x.id == id);
+            var result = _context.Event
+                                    .Include(x => x.chat)
+                                    .Include(x => x.userEvents)
+                                    .FirstOrDefault(x => x.id == id);
             if (result == null)
                 return NotFound();
 
@@ -53,14 +59,15 @@ namespace MovieGuideApi.Controllers
             if (item == null || item.id != id)
                 return BadRequest();
 
-            var even = _context.Event.Include(x => x.users)
+            var even = _context.Event
+                                    .Include(x => x.userEvents)
                                     .FirstOrDefault(x => x.id == id);
             if (even == null)
                 return NotFound();
 
             even.name = item.name;
             even.date = item.date;
-            even.users = item.users;
+            even.userEvents = item.userEvents;
 
             _context.Event.Update(even);
             _context.SaveChanges();
