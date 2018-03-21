@@ -1,0 +1,10 @@
+﻿<Properties StartupConfiguration="{76D47792-67C3-4876-B107-769AA6F16C83}|Default">
+  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.MovieGuideApi PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

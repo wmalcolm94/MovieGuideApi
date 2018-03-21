@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieGuideApi.Models;
+using System;
 
 namespace MovieGuideApi
 {
@@ -19,7 +20,16 @@ namespace MovieGuideApi
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddDbContext<MovieGuideContext>(options => options.UseSqlite("Data Source=LittleGods.db"));
-            services.AddDbContext<MovieGuideContext>(opt => opt.UseSqlServer("Server=movieguideapi.ch7je3w2pwwt.ca-central-1.rds.amazonaws.com,1433;User Id=sa;password=Duffmckagan1994;Database=movieguide;MultipleActiveResultSets=true"));
+            //services.AddDbContext<MovieGuideContext>(opt => opt.UseSqlServer("Server=movieguideapi.ch7je3w2pwwt.ca-central-1.rds.amazonaws.com,1433;User Id=sa;password=Duffmckagan1994;Database=movieguide;MultipleActiveResultSets=true"));
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+                services.AddDbContext<MovieGuideContext>(options =>
+                        options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
+            else
+                services.AddDbContext<MovieGuideContext>(options =>
+                        options.UseSqlite("Data Source=MovieGuide.db"));
+
+            // Automatically perform database migration
+            services.BuildServiceProvider().GetService<MovieGuideContext>().Database.Migrate();
             services.AddMvc();
         }
 
