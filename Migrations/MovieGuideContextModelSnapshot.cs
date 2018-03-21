@@ -25,14 +25,22 @@ namespace MovieGuideApi.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("eventId");
+
                     b.HasKey("id");
+
+                    b.HasIndex("eventId")
+                        .IsUnique();
 
                     b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("MovieGuideApi.Models.Event", b =>
                 {
-                    b.Property<int>("id");
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("chatId");
 
                     b.Property<DateTime>("date");
 
@@ -48,19 +56,19 @@ namespace MovieGuideApi.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("chatid");
+                    b.Property<int>("chatId");
 
                     b.Property<string>("message");
 
                     b.Property<DateTime>("sent");
 
-                    b.Property<int?>("userid");
+                    b.Property<int>("userId");
 
                     b.HasKey("id");
 
-                    b.HasIndex("chatid");
+                    b.HasIndex("chatId");
 
-                    b.HasIndex("userid");
+                    b.HasIndex("userId");
 
                     b.ToTable("Message");
                 });
@@ -97,11 +105,11 @@ namespace MovieGuideApi.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("MovieGuideApi.Models.Event", b =>
+            modelBuilder.Entity("MovieGuideApi.Models.Chat", b =>
                 {
-                    b.HasOne("MovieGuideApi.Models.Chat", "chat")
-                        .WithOne("evnt")
-                        .HasForeignKey("MovieGuideApi.Models.Event", "id")
+                    b.HasOne("MovieGuideApi.Models.Event", "evnt")
+                        .WithOne("chat")
+                        .HasForeignKey("MovieGuideApi.Models.Chat", "eventId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -109,11 +117,13 @@ namespace MovieGuideApi.Migrations
                 {
                     b.HasOne("MovieGuideApi.Models.Chat", "chat")
                         .WithMany("messages")
-                        .HasForeignKey("chatid");
+                        .HasForeignKey("chatId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MovieGuideApi.Models.User", "user")
                         .WithMany()
-                        .HasForeignKey("userid");
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MovieGuideApi.Models.User", b =>

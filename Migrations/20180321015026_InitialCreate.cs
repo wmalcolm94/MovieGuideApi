@@ -10,15 +10,18 @@ namespace MovieGuideApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Chat",
+                name: "Event",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    chatId = table.Column<int>(nullable: false),
+                    date = table.Column<DateTime>(nullable: false),
+                    name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chat", x => x.id);
+                    table.PrimaryKey("PK_Event", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -35,20 +38,20 @@ namespace MovieGuideApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Event",
+                name: "Chat",
                 columns: table => new
                 {
-                    id = table.Column<int>(nullable: false),
-                    date = table.Column<DateTime>(nullable: false),
-                    name = table.Column<string>(nullable: true)
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    eventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Event", x => x.id);
+                    table.PrimaryKey("PK_Chat", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Event_Chat_id",
-                        column: x => x.id,
-                        principalTable: "Chat",
+                        name: "FK_Chat_Event_eventId",
+                        column: x => x.eventId,
+                        principalTable: "Event",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -81,37 +84,43 @@ namespace MovieGuideApi.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    chatid = table.Column<int>(nullable: true),
+                    chatId = table.Column<int>(nullable: false),
                     message = table.Column<string>(nullable: true),
                     sent = table.Column<DateTime>(nullable: false),
-                    userid = table.Column<int>(nullable: true)
+                    userId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Message", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Message_Chat_chatid",
-                        column: x => x.chatid,
+                        name: "FK_Message_Chat_chatId",
+                        column: x => x.chatId,
                         principalTable: "Chat",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Message_User_userid",
-                        column: x => x.userid,
+                        name: "FK_Message_User_userId",
+                        column: x => x.userId,
                         principalTable: "User",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_chatid",
-                table: "Message",
-                column: "chatid");
+                name: "IX_Chat_eventId",
+                table: "Chat",
+                column: "eventId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_userid",
+                name: "IX_Message_chatId",
                 table: "Message",
-                column: "userid");
+                column: "chatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_userId",
+                table: "Message",
+                column: "userId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Eventid",
@@ -128,13 +137,13 @@ namespace MovieGuideApi.Migrations
                 name: "Movie");
 
             migrationBuilder.DropTable(
+                name: "Chat");
+
+            migrationBuilder.DropTable(
                 name: "User");
 
             migrationBuilder.DropTable(
                 name: "Event");
-
-            migrationBuilder.DropTable(
-                name: "Chat");
         }
     }
 }
