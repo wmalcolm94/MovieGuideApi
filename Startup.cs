@@ -18,7 +18,8 @@ namespace MovieGuideApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MovieGuideContext>(options => options.UseSqlite("Data Source=LittleGods.db"));
+            //services.AddDbContext<MovieGuideContext>(options => options.UseSqlite("Data Source=LittleGods.db"));
+            services.AddDbContext<MovieGuideContext>(opt => opt.UseSqlServer("Server=movieguideapi.ch7je3w2pwwt.ca-central-1.rds.amazonaws.com,1433;User Id=sa;password=Duffmckagan1994;Database=movieguide;MultipleActiveResultSets=true"));
             services.AddMvc();
         }
 
