@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +13,7 @@ namespace MovieGuideApi.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     chatId = table.Column<int>(nullable: false),
                     date = table.Column<DateTime>(nullable: false),
                     name = table.Column<string>(nullable: true)
@@ -29,7 +28,7 @@ namespace MovieGuideApi.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -38,11 +37,26 @@ namespace MovieGuideApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    email = table.Column<string>(nullable: true),
+                    name = table.Column<string>(nullable: true),
+                    password = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Chat",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     eventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -57,25 +71,29 @@ namespace MovieGuideApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "UserEvent",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Eventid = table.Column<int>(nullable: true),
-                    email = table.Column<string>(nullable: true),
-                    name = table.Column<string>(nullable: true),
-                    password = table.Column<string>(nullable: true)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    eventId = table.Column<int>(nullable: false),
+                    userId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.id);
+                    table.PrimaryKey("PK_UserEvent", x => x.id);
                     table.ForeignKey(
-                        name: "FK_User_Event_Eventid",
-                        column: x => x.Eventid,
+                        name: "FK_UserEvent_Event_eventId",
+                        column: x => x.eventId,
                         principalTable: "Event",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserEvent_User_userId",
+                        column: x => x.userId,
+                        principalTable: "User",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +101,7 @@ namespace MovieGuideApi.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     chatId = table.Column<int>(nullable: false),
                     message = table.Column<string>(nullable: true),
                     sent = table.Column<DateTime>(nullable: false),
@@ -123,9 +141,14 @@ namespace MovieGuideApi.Migrations
                 column: "userId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Eventid",
-                table: "User",
-                column: "Eventid");
+                name: "IX_UserEvent_eventId",
+                table: "UserEvent",
+                column: "eventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserEvent_userId",
+                table: "UserEvent",
+                column: "userId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -135,6 +158,9 @@ namespace MovieGuideApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Movie");
+
+            migrationBuilder.DropTable(
+                name: "UserEvent");
 
             migrationBuilder.DropTable(
                 name: "Chat");

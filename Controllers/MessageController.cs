@@ -70,6 +70,7 @@ namespace MovieGuideApi.Controllers
             message.sent = item.sent;
             message.userId = item.userId;
             message.user = item.user;
+            
             _context.Message.Update(message);
             _context.SaveChanges();
 

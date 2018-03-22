@@ -21,7 +21,7 @@ namespace MovieGuideApi.Controllers
         {
             List<Chat> results = _context.Chat
                                             .Include(x => x.evnt)
-                                            .Include(x => x.messages)
+                                            //.Include(x => x.messages)
                                             .ToList();
             return results;
         }
@@ -31,7 +31,7 @@ namespace MovieGuideApi.Controllers
         {
             var result = _context.Chat
                                     .Include(x => x.evnt)
-                                    .Include(x => x.messages)
+                                    //.Include(x => x.messages)
                                     .FirstOrDefault(x => x.id == id);
             if (result == null)
                 return NotFound();

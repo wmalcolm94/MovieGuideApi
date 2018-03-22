@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MovieGuideApi.Models 
 {
@@ -7,6 +8,8 @@ namespace MovieGuideApi.Models
         public int id { get; set; }
         public int eventId { get; set; }
         public Event evnt { get; set; }
+
+        [JsonIgnore]
         public ICollection<Message> messages { get; set; }
     }
 }

@@ -19,10 +19,7 @@ namespace MovieGuideApi.Controllers
         [HttpGet]
         public IEnumerable<Event> Get()
         {
-            List<Event> results = _context.Event
-                                        .Include(x => x.chat)
-                                        .Include(x => x.userEvents)
-                                        .ToList();
+            List<Event> results = _context.Event.ToList();
             return results;
         }
 
@@ -30,12 +27,13 @@ namespace MovieGuideApi.Controllers
         [HttpGet("{id}", Name = "GetEvent")]
         public IActionResult Get(int id)
         {
-            var result = _context.Event
-                                    .Include(x => x.chat)
-                                    .Include(x => x.userEvents)
-                                    .FirstOrDefault(x => x.id == id);
+            var result = _context.Event.FirstOrDefault(x => x.id == id);
+
             if (result == null)
                 return NotFound();
+
+            _context.Entry(result).Reference(x => x.userEvents).Load();
+            _context.Entry(result).Reference(x => x.chat).Load();
 
             return new ObjectResult(result);
         }

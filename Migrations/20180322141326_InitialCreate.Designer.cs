@@ -11,15 +11,14 @@ using System;
 namespace MovieGuideApi.Migrations
 {
     [DbContext(typeof(MovieGuideContext))]
-    [Migration("20180321125934_UserEvent")]
-    partial class UserEvent
+    [Migration("20180322141326_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("MovieGuideApi.Models.Chat", b =>
                 {
