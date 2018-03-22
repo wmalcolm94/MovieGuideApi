@@ -19,18 +19,14 @@ namespace MovieGuideApi.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            List<User> results = _context.User
-                                            .Include(x => x.userEvents)
-                                            .ToList();
+            List<User> results = _context.User.ToList();
             return results;
         }
 
         [HttpGet("{id}", Name = "GetUser")]
         public IActionResult Get(int id)
         {
-            var result = _context.User
-                                    .Include(x => x.userEvents)
-                                    .FirstOrDefault(x => x.id == id);
+            var result = _context.User.FirstOrDefault(x => x.id == id);
             if (result == null)
                 return NotFound();
 

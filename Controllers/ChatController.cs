@@ -19,10 +19,11 @@ namespace MovieGuideApi.Controllers
         [HttpGet]
         public IEnumerable<Chat> Get()
         {
-            List<Chat> results = _context.Chat
-                                            .Include(x => x.evnt)
-                                            //.Include(x => x.messages)
-                                            .ToList();
+            List<Chat> results = _context.Chat.ToList();
+            foreach (var item in results)
+            {
+                _context.Entry(item).Collection(x => x.messages).Load();
+            }
             return results;
         }
 
@@ -30,11 +31,12 @@ namespace MovieGuideApi.Controllers
         public IActionResult Get(int id)
         {
             var result = _context.Chat
-                                    .Include(x => x.evnt)
-                                    //.Include(x => x.messages)
+                                    .Include(x => x.messages)
                                     .FirstOrDefault(x => x.id == id);
             if (result == null)
                 return NotFound();
+            
+            _context.Entry(result).Collection(x => x.messages).Load();
 
             return new ObjectResult(result);
         }
@@ -61,8 +63,6 @@ namespace MovieGuideApi.Controllers
             if (chat == null)
                 return NotFound();
 
-            chat.eventId = item.eventId;
-            chat.evnt = item.evnt;
             chat.messages = item.messages;
 
             _context.Chat.Update(chat);

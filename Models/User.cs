@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MovieGuideApi.Models
 {
@@ -8,6 +9,7 @@ namespace MovieGuideApi.Models
         public string name { get; set; }
         public string email { get; set; }
         public string password { get; set; }
-        public ICollection<UserEvent> userEvents { get; set; }
+        [JsonIgnore]
+        public ICollection<Chat> chats { get; set; }
     }
 }
