@@ -11,44 +11,28 @@ using System;
 namespace MovieGuideApi.Migrations
 {
     [DbContext(typeof(MovieGuideContext))]
-    [Migration("20180322141326_InitialCreate")]
+    [Migration("20180322163719_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MovieGuideApi.Models.Chat", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("eventId");
+                    b.Property<int?>("Userid");
 
                     b.HasKey("id");
 
-                    b.HasIndex("eventId")
-                        .IsUnique();
+                    b.HasIndex("Userid");
 
                     b.ToTable("Chat");
-                });
-
-            modelBuilder.Entity("MovieGuideApi.Models.Event", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("chatId");
-
-                    b.Property<DateTime>("date");
-
-                    b.Property<string>("name");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("MovieGuideApi.Models.Message", b =>
@@ -78,9 +62,13 @@ namespace MovieGuideApi.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("chatId");
+
                     b.Property<string>("name");
 
                     b.HasKey("id");
+
+                    b.HasIndex("chatId");
 
                     b.ToTable("Movie");
                 });
@@ -101,30 +89,11 @@ namespace MovieGuideApi.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("MovieGuideApi.Models.UserEvent", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("eventId");
-
-                    b.Property<int>("userId");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("eventId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("UserEvent");
-                });
-
             modelBuilder.Entity("MovieGuideApi.Models.Chat", b =>
                 {
-                    b.HasOne("MovieGuideApi.Models.Event", "evnt")
-                        .WithOne("chat")
-                        .HasForeignKey("MovieGuideApi.Models.Chat", "eventId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("MovieGuideApi.Models.User")
+                        .WithMany("chats")
+                        .HasForeignKey("Userid");
                 });
 
             modelBuilder.Entity("MovieGuideApi.Models.Message", b =>
@@ -140,16 +109,11 @@ namespace MovieGuideApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MovieGuideApi.Models.UserEvent", b =>
+            modelBuilder.Entity("MovieGuideApi.Models.Movie", b =>
                 {
-                    b.HasOne("MovieGuideApi.Models.Event", "evnt")
-                        .WithMany("userEvents")
-                        .HasForeignKey("eventId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MovieGuideApi.Models.User", "user")
-                        .WithMany("userEvents")
-                        .HasForeignKey("userId")
+                    b.HasOne("MovieGuideApi.Models.Chat", "chat")
+                        .WithMany()
+                        .HasForeignKey("chatId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
