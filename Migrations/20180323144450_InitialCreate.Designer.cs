@@ -11,7 +11,7 @@ using System;
 namespace MovieGuideApi.Migrations
 {
     [DbContext(typeof(MovieGuideContext))]
-    [Migration("20180322163719_InitialCreate")]
+    [Migration("20180323144450_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,11 @@ namespace MovieGuideApi.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("Userid");
+                    b.Property<int>("movieId");
 
                     b.HasKey("id");
 
-                    b.HasIndex("Userid");
+                    b.HasIndex("movieId");
 
                     b.ToTable("Chat");
                 });
@@ -62,13 +62,9 @@ namespace MovieGuideApi.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("chatId");
-
                     b.Property<string>("name");
 
                     b.HasKey("id");
-
-                    b.HasIndex("chatId");
 
                     b.ToTable("Movie");
                 });
@@ -91,9 +87,10 @@ namespace MovieGuideApi.Migrations
 
             modelBuilder.Entity("MovieGuideApi.Models.Chat", b =>
                 {
-                    b.HasOne("MovieGuideApi.Models.User")
-                        .WithMany("chats")
-                        .HasForeignKey("Userid");
+                    b.HasOne("MovieGuideApi.Models.Movie", "movie")
+                        .WithMany()
+                        .HasForeignKey("movieId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MovieGuideApi.Models.Message", b =>
@@ -106,14 +103,6 @@ namespace MovieGuideApi.Migrations
                     b.HasOne("MovieGuideApi.Models.User", "user")
                         .WithMany()
                         .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MovieGuideApi.Models.Movie", b =>
-                {
-                    b.HasOne("MovieGuideApi.Models.Chat", "chat")
-                        .WithMany()
-                        .HasForeignKey("chatId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

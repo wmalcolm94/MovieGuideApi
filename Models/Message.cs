@@ -13,7 +13,6 @@ namespace MovieGuideApi.Models
         [JsonIgnore]
         public Chat chat { get; set; }
         public int userId { get; set; }
-        [JsonIgnore]
         public User user { get; set; }
     }
 }

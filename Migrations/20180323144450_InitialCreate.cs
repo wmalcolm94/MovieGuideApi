@@ -10,6 +10,19 @@ namespace MovieGuideApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Movie",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movie", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -30,17 +43,17 @@ namespace MovieGuideApi.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Userid = table.Column<int>(nullable: true)
+                    movieId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chat", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Chat_User_Userid",
-                        column: x => x.Userid,
-                        principalTable: "User",
+                        name: "FK_Chat_Movie_movieId",
+                        column: x => x.movieId,
+                        principalTable: "Movie",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,30 +84,10 @@ namespace MovieGuideApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Movie",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    chatId = table.Column<int>(nullable: false),
-                    name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Movie", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Movie_Chat_chatId",
-                        column: x => x.chatId,
-                        principalTable: "Chat",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_Chat_Userid",
+                name: "IX_Chat_movieId",
                 table: "Chat",
-                column: "Userid");
+                column: "movieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Message_chatId",
@@ -105,11 +98,6 @@ namespace MovieGuideApi.Migrations
                 name: "IX_Message_userId",
                 table: "Message",
                 column: "userId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Movie_chatId",
-                table: "Movie",
-                column: "chatId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -118,13 +106,13 @@ namespace MovieGuideApi.Migrations
                 name: "Message");
 
             migrationBuilder.DropTable(
-                name: "Movie");
-
-            migrationBuilder.DropTable(
                 name: "Chat");
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Movie");
         }
     }
 }

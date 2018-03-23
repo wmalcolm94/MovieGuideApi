@@ -22,6 +22,7 @@ namespace MovieGuideApi.Controllers
             List<Chat> results = _context.Chat.ToList();
             foreach (var item in results)
             {
+                _context.Entry(item).Reference(x => x.movie).Load();
                 _context.Entry(item).Collection(x => x.messages).Load();
             }
             return results;
@@ -36,6 +37,7 @@ namespace MovieGuideApi.Controllers
             if (result == null)
                 return NotFound();
             
+            _context.Entry(result).Reference(x => x.movie).Load();
             _context.Entry(result).Collection(x => x.messages).Load();
 
             return new ObjectResult(result);

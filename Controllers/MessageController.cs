@@ -19,10 +19,11 @@ namespace MovieGuideApi.Controllers
         [HttpGet]
         public IEnumerable<Message> Get()
         {
-            List<Message> results = _context.Message
-                                                .Include(x => x.chat)
-                                                .Include(x => x.user)
-                                                .ToList();
+            List<Message> results = _context.Message.ToList();
+            foreach (var item in results)
+            {
+                _context.Entry(item).Reference(x => x.user).Load();
+            }
             return results;
         }
 
