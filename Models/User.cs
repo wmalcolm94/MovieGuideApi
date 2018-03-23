@@ -9,7 +9,5 @@ namespace MovieGuideApi.Models
         public string name { get; set; }
         public string email { get; set; }
         public string password { get; set; }
-        [JsonIgnore]
-        public ICollection<Chat> chats { get; set; }
     }
 }
